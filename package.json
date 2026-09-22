@@ -1,0 +1,14 @@
+{
+  "name": "memory-that-knows-it-might-be-wrong",
+  "version": "1.0.0",
+  "description": "An agent memory layer that tags every fact with source, confidence, freshness and scope, and forgets on purpose.",
+  "type": "module",
+  "private": true,
+  "license": "MIT",
+  "engines": { "node": ">=18" },
+  "scripts": {
+    "test": "node --test test/engine.test.js test/fuzz.test.js",
+    "demo": "node scripts/demo.js",
+    "serve": "node scripts/serve.js"
+  }
+}

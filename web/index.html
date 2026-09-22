@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Memory That Knows It Might Be Wrong</title>
+  <meta name="description" content="An agent memory layer that tags every fact with source, confidence, freshness and scope, says when it is unsure, and forgets on purpose.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%232d6a4f'/%3E%3Ctext x='16' y='23' font-size='20' text-anchor='middle' fill='white' font-family='sans-serif'%3E?%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="top">
+    <div class="brand">
+      <h1>Memory that knows it might be wrong</h1>
+      <p>Every fact carries its <b>source</b>, <b>confidence</b>, <b>freshness</b> and <b>scope</b>. Confidence decays, contradictions are surfaced, and forgetting is a real delete.</p>
+    </div>
+    <div class="controls" role="group" aria-label="Demo controls">
+      <div class="ctl">
+        <span class="ctl-label">Simulated clock</span>
+        <span id="clock" class="clock" aria-live="polite">–</span>
+        <div class="btnrow">
+          <button data-advance="7">+1 week</button>
+          <button data-advance="182">+6 months</button>
+          <button data-advance="365">+1 year</button>
+          <button data-advance="730">+2 years</button>
+        </div>
+      </div>
+      <div class="ctl">
+        <span class="ctl-label">Who can see this screen?</span>
+        <div class="seg" role="radiogroup" aria-label="Audience">
+          <button id="aud-private" role="radio" aria-checked="true" class="on">Just me</button>
+          <button id="aud-shared" role="radio" aria-checked="false">Shared screen</button>
+        </div>
+        <label class="check"><input type="checkbox" id="allow-infer" checked> Allow guesses (inference)</label>
+      </div>
+    </div>
+  </header>
+
+  <main class="grid">
+    <section class="col chat" aria-label="Conversation">
+      <div class="demo card" id="demo">
+        <div class="demo-head">
+          <strong>Guided demo</strong>
+          <span id="demo-progress" class="muted">Not started</span>
+          <div class="btnrow">
+            <button id="demo-auto" class="primary">Play guided demo (~1 min)</button>
+            <button id="demo-step">Step &#9656;</button>
+          </div>
+        </div>
+        <p id="demo-note" class="demo-note">Press play: it will teach the agent a few things, let time pass, then show it doubting itself, handling a contradiction, and forgetting on request. Or just type below.</p>
+      </div>
+
+      <div id="log" class="log" role="log" aria-live="polite"></div>
+
+      <div class="quick" id="quick"></div>
+      <form id="form" class="form" autocomplete="off">
+        <input id="input" type="text" placeholder="Tell me something about yourself, or ask what I remember..." aria-label="Message">
+        <button class="primary" type="submit">Send</button>
+      </form>
+
+      <details class="card trace" id="trace-box" open>
+        <summary>Pipeline trace for the last turn <span class="muted">(write path, retrieval path, forgetting path)</span></summary>
+        <ol id="trace" class="trace-list"><li class="muted">Nothing yet.</li></ol>
+      </details>
+    </section>
+
+    <aside class="col inspector" aria-label="Memory inspector">
+      <div class="card">
+        <div class="insp-head">
+          <h2>What I remember about you</h2>
+          <div class="btnrow">
+            <button id="export">Export</button>
+            <button id="reset" class="danger">Reset all</button>
+          </div>
+        </div>
+        <div id="counts" class="counts"></div>
+        <div class="legend">
+          <span><i class="dot b-confident"></i>confident &ge;75%</span>
+          <span><i class="dot b-hedge"></i>hedge &ge;50%</span>
+          <span><i class="dot b-verify"></i>ask first &ge;25%</span>
+          <span><i class="dot b-faded"></i>fading</span>
+        </div>
+      </div>
+      <div id="cards" class="cards"></div>
+      <details class="card audit">
+        <summary>Forgotten &amp; audit trail <span class="muted" id="audit-count"></span></summary>
+        <p class="muted small">Deleted memories leave only a slot name and a reason here, never the value. The do-not-relearn list stores hashes.</p>
+        <ul id="audit" class="audit-list"></ul>
+      </details>
+    </aside>
+  </main>
+
+  <footer class="foot">
+    <p>Runs entirely in your browser. Nothing is sent anywhere; memory is stored in this page's localStorage. The agent is rule-based on purpose so the demo is reproducible. See the repo for the architecture, failure tests and two-year thesis.</p>
+  </footer>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
